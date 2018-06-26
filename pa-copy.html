@@ -48,6 +48,7 @@ console.log(processDocument);
 //Execute process callback function
 var executeCallback = function (response){
   console.log(response);
+  console.log(response.responseDocument.process.identifier);
   // console.log(response.type);
   // console.log(response.serviceVersion);
   // console.log(response.responseDocument);
@@ -83,15 +84,15 @@ var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0(identif
 //Output generator for complex dataType
 var outputGenerator = new OutputGenerator();
 
-identifier = 'result';
-asReferenceidentifier = false;
-mimeType = 'text/xml';
-schema = 'undefined';
-encoding = 'undefined';
-uom = 'undefined';
-asReference = false;
-title = 'Execute test';
-abstractValue = 'This is the very first test';
+var identifier = 'result';
+var asReferenceidentifier = false;
+var mimeType = 'text/xml';
+var schema = 'undefined';
+var encoding = 'undefined';
+var uom = 'undefined';
+var asReference = false;
+var title = 'Execute test';
+var abstractValue = 'This is the very first test';
 
 var complexOutput = outputGenerator.createComplexOutput_WPS_1_0(identifier, asReferenceidentifier, mimeType, schema,
 			encoding, uom, asReference, title, abstractValue);
@@ -105,9 +106,9 @@ var processIdentifier = 'org.n52.wps.server.algorithm.SimpleBufferAlgorithm';
 var responseFormat = 'text/xml';
 var executionMode = 'async';
 var lineage = false;
-var inputs = [complexInput,literalInput];
+var inputs = complexInput;
 var outputs = complexOutput;
-wpsService.execute(callbackFunction, processIdentifier, responseFormat, executionMode, lineage, (inputs[0],inputs[1]), outputs);
+wpsService.execute(callbackFunction, processIdentifier, responseFormat, executionMode, lineage, inputs, outputs);
 
 </script>
   </body>
