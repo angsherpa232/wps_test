@@ -12,18 +12,17 @@ this is the testing WPS
 // initialize wpsService
 var wpsService = new WpsService({
   url: "http://geoprocessing.demo.52north.org:8080/wps/WebProcessingService",
-  version: "1.0.0"
+  version: "2.0.0"
 });
 
 var capabilities,
   processDescription; // the process description
 
+var jobId;
+
   var capabilitiesCallback = function(response) {
 
-    capabilities = response;
-
-    // extract processes, add them to process-list
-    //array of processes
+    var capabilities = response;
     var processes = response.capabilities.processes;
     var processCapabilities = response.responseDocument;
     console.log(capabilities.capabilities.processes[3]);
@@ -38,77 +37,61 @@ var capabilities,
     //set value of textarea
     var processDocument = processDescription.responseDocument;
     var xml = new XMLSerializer().serializeToString(processDocument);
-
-
-console.log(processDocument);
+    console.log(processDocument);
 // console.log(xml);
   };
 
 
+
+// var resultCallback = function(response){
+//   // console.log(response);
+//   console.log(response.executeResponse);
+// }
+
+// wpsService.getResult_WPS_2_0(resultCallback, 'eaa641a5-0c9f-4964-b559-59bc8f84da95');
+
+
 //Execute process callback function
 var executeCallback = function (response){
-  console.log(response);
-  console.log(response.responseDocument.process.identifier);
-  // console.log(response.type);
-  // console.log(response.serviceVersion);
+  // console.log(response);
   // console.log(response.responseDocument);
+  console.log(response.executeResponse.responseDocument);
 };
+
+
+// var statusCallback = function(response){
+//   console.log(response);
+// }
+
+// wpsService.getStatus_WPS_2_0(statusCallback, 'eaa641a5-0c9f-4964-b559-59bc8f84da95');
 
 //Input generator for literal dataType
 var inputGenerator = new InputGenerator();
-var identifier = 'width';
-var dataType = 'undefined';
-var uom = 'undefined';
-var value = 1.5;
-
 //Literal input
-var literalInput = inputGenerator.createLiteralDataInput_wps_1_0_and_2_0(identifier, dataType, uom, value);
-// console.log(literalInput);
-
+// var literalInput = inputGenerator.createLiteralDataInput_wps_1_0_and_2_0(identifier, dataType, uom, value);
+var literalInput = inputGenerator.createLiteralDataInput_wps_1_0_and_2_0('width', undefined, undefined, 1.5);
 
 //Input generator for complex data dataType
-var identifier = 'data';
-// mimeType = 'application/vnd.geo+json';
-var mimeType = 'application/vnd.geo+json';
-var schema = 'undefined';
-var encoding = 'undefined';
-var asReference = false;
-var complexPayload = './sample.geojson';
+// var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0(identifier,
+// 					mimeType, schema, encoding, asReference, complexPayload);
+var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0('data',
+					'application/vnd.geo+json', 'text/xml', undefined, false, 'sample.geojson');
 
-//Complex input
-var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0(identifier,
-					mimeType, schema, encoding, asReference, complexPayload);
-
-// console.log(complexInput);
 
 //Output generator for complex dataType
 var outputGenerator = new OutputGenerator();
 
-var identifier = 'result';
-var asReferenceidentifier = false;
-var mimeType = 'text/xml';
-var schema = 'undefined';
-var encoding = 'undefined';
-var uom = 'undefined';
-var asReference = false;
-var title = 'Execute test';
-var abstractValue = 'This is the very first test';
-
-var complexOutput = outputGenerator.createComplexOutput_WPS_1_0(identifier, asReferenceidentifier, mimeType, schema,
-			encoding, uom, asReference, title, abstractValue);
+// var complexOutput = outputGenerator.createComplexOutput_WPS_2_0(identifier, mimeType, schema,
+// 			encoding, transmission);
+var complexOutput = outputGenerator.createComplexOutput_WPS_2_0('result', undefined, undefined,
+      undefined, 'value');
 
 // wpsService.getCapabilities_GET(capabilitiesCallback);
 // wpsService.describeProcess_GET(describeProcessCallback,'org.n52.wps.server.algorithm.SimpleBufferAlgorithm');
 
 //WPS execute
-var callbackFunction = executeCallback;
-var processIdentifier = 'org.n52.wps.server.algorithm.SimpleBufferAlgorithm';
-var responseFormat = 'text/xml';
-var executionMode = 'async';
-var lineage = false;
-var inputs = complexInput;
-var outputs = complexOutput;
-wpsService.execute(callbackFunction, processIdentifier, responseFormat, executionMode, lineage, inputs, outputs);
+// wpsService.execute(callbackFunction, processIdentifier, responseFormat, executionMode, lineage, inputs, outputs);
+wpsService.execute(executeCallback, 'org.n52.wps.server.algorithm.SimpleBufferAlgorithm', 'document', 'async', false, [literalInput,complexInput], complexOutput);
 
 </script>
   </body>
