@@ -49,7 +49,7 @@ var resultCallback = function(response){
 }
 
 // wpsService.getResult_WPS_2_0(resultCallback, '888e6472-cad7-4245-8124-72e04b45bf68');
-
+wpsService.getResult_WPS_2_0(resultCallback,'2b121287-905e-435d-8a0e-2a06526ce6ea');
 
 //Execute process callback function
 var executeCallback = function (response){
@@ -63,7 +63,7 @@ var statusCallback = function(response){
   console.log(response);
 }
 
-wpsService.getStatus_WPS_2_0(statusCallback, "888e6472-cad7-4245-8124-72e04b45bf68");
+// wpsService.getStatus_WPS_2_0(statusCallback, "888e6472-cad7-4245-8124-72e04b45bf68");
 
 //Input generator for literal dataType
 var inputGenerator = new InputGenerator();
@@ -75,7 +75,7 @@ var literalInput = inputGenerator.createLiteralDataInput_wps_1_0_and_2_0('width'
 // var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0(identifier,
 // 					mimeType, schema, encoding, asReference, complexPayload);
 var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0('data',
-					'application/vnd.geo+json', undefined, undefined, true, 'https://api.myjson.com/bins/bnn0u');
+					'application/vnd.geo+json', undefined, undefined, true, 'https://api.myjson.com/bins/1a2pi6');
 // var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0('data',
 // 					'application/vnd.geo+json', undefined, undefined, false, 'sample.geojson');
 
