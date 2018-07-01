@@ -12,7 +12,7 @@ this is the testing WPS
 // initialize wpsService
 var wpsService = new WpsService({
   url: "http://geoprocessing.demo.52north.org:8080/wps/WebProcessingService",
-  version: "2.0.0"
+  version: "1.0.0"
 });
 
 var capabilities,
@@ -49,13 +49,13 @@ var resultCallback = function(response){
 }
 
 // wpsService.getResult_WPS_2_0(resultCallback, '888e6472-cad7-4245-8124-72e04b45bf68');
-wpsService.getResult_WPS_2_0(resultCallback,'2b121287-905e-435d-8a0e-2a06526ce6ea');
+// wpsService.getResult_WPS_2_0(resultCallback,'2b121287-905e-435d-8a0e-2a06526ce6ea');
 
 //Execute process callback function
 var executeCallback = function (response){
-  // console.log(response);
+  console.log(response);
   // console.log(response.responseDocument);
-  console.log(response.executeResponse.responseDocument);
+  // console.log(response.executeResponse.responseDocument);
 };
 
 
@@ -63,22 +63,30 @@ var statusCallback = function(response){
   console.log(response);
 }
 
-// wpsService.getStatus_WPS_2_0(statusCallback, "888e6472-cad7-4245-8124-72e04b45bf68");
+// wpsService.getStatus_WPS_2_0(statusCallback, "c25916dc-db76-4c81-bdd1-23f1d92a1783");
 
 //Input generator for literal dataType
 var inputGenerator = new InputGenerator();
 //Literal input
 // var literalInput = inputGenerator.createLiteralDataInput_wps_1_0_and_2_0(identifier, dataType, uom, value);
-var literalInput = inputGenerator.createLiteralDataInput_wps_1_0_and_2_0('width', undefined, undefined, 1.5);
+var literalInput = inputGenerator.createLiteralDataInput_wps_1_0_and_2_0('width', "xs:double", undefined, 1.5);
 
 //Input generator for complex data dataType
 // var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0(identifier,
 // 					mimeType, schema, encoding, asReference, complexPayload);
 var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0('data',
-					'application/vnd.geo+json', undefined, undefined, true, 'https://api.myjson.com/bins/1a2pi6');
+					'application/vnd.geo+json', undefined, undefined, true, 'https://api.myjson.com/bins/t2muy');
 // var complexInput = inputGenerator.createComplexDataInput_wps_1_0_and_2_0('data',
 // 					'application/vnd.geo+json', undefined, undefined, false, 'sample.geojson');
 
+
+
+//Testing to retrieve the information WPS1.0.0
+var call = function(response){
+  console.log(response);
+}
+var storedExecuteResponseLocation = 'http://geoprocessing.demo.52north.org:80/wps/RetrieveResultServlet?id=8f65263f-42fd-4bb7-9711-fec9a9661f88'
+// wpsService.parseStoredExecuteResponse_WPS_1_0(call, storedExecuteResponseLocation);
 
 
 //Output generator for complex dataType
@@ -86,15 +94,23 @@ var outputGenerator = new OutputGenerator();
 
 // var complexOutput = outputGenerator.createComplexOutput_WPS_2_0(identifier, mimeType, schema,
 // 			encoding, transmission);
-var complexOutput = outputGenerator.createComplexOutput_WPS_2_0('result', undefined, undefined,
-      undefined, 'value');
+// var complexOutput = outputGenerator.createComplexOutput_WPS_1_0(identifier, asReferenceidentifier, mimeType, schema,
+// 			encoding, uom, asReference, title, abstractValue);
+var complexOutput = outputGenerator.createComplexOutput_WPS_1_0('result', false, 'application/vnd.geo+json', undefined,
+			undefined, undefined, false, 'THis is buffer output', 'this is');
+
+//Output generator for literal dataType
+var literalOutput = outputGenerator.createLiteralOutput_WPS_1_0('result', false);
+
+// var complexOutput = outputGenerator.createComplexOutput_WPS_2_0('result', undefined, undefined,
+//       undefined, 'reference');
 
 // wpsService.getCapabilities_GET(capabilitiesCallback);
 // wpsService.describeProcess_GET(describeProcessCallback,'org.n52.wps.server.algorithm.SimpleBufferAlgorithm');
 
 //WPS execute
 // wpsService.execute(callbackFunction, processIdentifier, responseFormat, executionMode, lineage, inputs, outputs);
-// wpsService.execute(executeCallback, 'org.n52.wps.server.algorithm.SimpleBufferAlgorithm', 'document', 'async', false, [literalInput,complexInput], complexOutput);
+wpsService.execute(executeCallback, 'org.n52.wps.server.algorithm.SimpleBufferAlgorithm', 'document', 'async', true, [literalInput,complexInput], [complexOutput]);
 
 </script>
   </body>
